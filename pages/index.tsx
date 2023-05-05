@@ -1,27 +1,21 @@
-import {supabase} from './../lib/supabaseClient'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+import Account from '../components/Account'
 
+const Home = () => {
+  const session = useSession()
+  const supabase = useSupabaseClient()
 
-export default function Home({countries}) {
-  
-  console.log(countries)
   return (
-    
-      <ul>
-        {countries && countries.map(country=>(
-          <li key={country.id}>{country.name}</li>
-        ))
-          
-        }
-      </ul>
-    
+    <div className="container" style={{ padding: '50px 0 100px 0' }}>
+      {!session ? (
+        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} theme="dark" />
+      ) : (
+        <Account session={session} />
+      )}
+    </div>
   )
 }
 
-export async function getServerSideProps(){
-let {data} = await supabase.from('countries').select()
-  return {
-    props:{
-      countries:data
-    },
-  }
-}
+export default Home
