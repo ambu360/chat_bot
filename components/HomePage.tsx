@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react'
 import { useUser,useSupabaseClient } from '@supabase/auth-helpers-react'
-
+import ChatSession from './chat_session'
 export default function HomePage ({session}){
 const supabase = useSupabaseClient()
 const user = useUser()
@@ -38,6 +38,7 @@ return(
             </div>
             <h3>{username}</h3>
             <button onClick={()=>(supabase.auth.signOut())}>Sign Out</button>
+            <ChatSession/>
         </main>
     )
 }

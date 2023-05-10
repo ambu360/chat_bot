@@ -14,7 +14,7 @@ const Home:NextPage  = () => {
   const [value,setvalue] = useState<string>('')
   const [prompt,setPrompt] = useState<string>('')
   const [completion,setCompletion] = useState<boolean>(false)
-
+const x = 0
    
   return (
     <div className="flex justify-center flex-col items-center" style={{ padding: '50px 0 100px 0' }}>
@@ -23,7 +23,10 @@ const Home:NextPage  = () => {
           <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} theme="dark" />
           </div>
       ) : (
+        <>
         <HomePage session={session}/>
+        <input type = 'text'></input>
+        </>
       )}
     </div>
   )
