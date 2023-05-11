@@ -11,11 +11,7 @@ const Home:NextPage  = () => {
   const supabase = useSupabaseClient()
   
   //varaiables tracked for opnai
-  const [value,setvalue] = useState<string>('')
-  const [prompt,setPrompt] = useState<string>('')
-  const [completion,setCompletion] = useState<boolean>(false)
-const x = 0
-   
+  
   return (
     <div className="flex justify-center flex-col items-center" style={{ padding: '50px 0 100px 0' }}>
       {!session ? (
