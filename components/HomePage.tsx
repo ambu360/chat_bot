@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
 export interface MessageType {
-  role:string
-  content:string
+  role: string;
+  content: string;
 }
 export interface ConversationType {
-  messages:MessageType[]
+  messages: MessageType[];
 }
 export default function HomePage({ session }) {
   const supabase = useSupabaseClient();
@@ -15,16 +15,14 @@ export default function HomePage({ session }) {
   const [loading, setLoading] = useState(false);
 
   const [value, setValue] = useState<string>("");
-    const [prompt, setPrompt] = useState<string>("");
-    const [completion, setCompletion] = useState<string>('');
-    const [coversation,setConversation] = useState<MessageType[]>()
+  const [prompt, setPrompt] = useState<string>("");
+  const [completion, setCompletion] = useState<string>("");
+  const [coversation, setConversation] = useState<MessageType[]>();
   useEffect(() => {
     getUserProfile();
   });
 
   async function getUserProfile() {
-    
-
     try {
       setLoading(true);
 
@@ -51,17 +49,17 @@ export default function HomePage({ session }) {
       </div>
       <h3>{username}</h3>
       <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-      <ChatSession 
-  value={value}
-  setValue={setValue}
-  prompt={prompt}
-  setPrompt={setPrompt}
-  completion={completion}
-  setCompletion={setCompletion}
-  conversation={coversation}
-  setConversation={setConversation}
-/>
-{completion && <h1>{completion}</h1>}
+      <ChatSession
+        value={value}
+        setValue={setValue}
+        prompt={prompt}
+        setPrompt={setPrompt}
+        completion={completion}
+        setCompletion={setCompletion}
+        conversation={coversation}
+        setConversation={setConversation}
+      />
+      {completion && <h1>{completion}</h1>}
     </main>
   );
 }
