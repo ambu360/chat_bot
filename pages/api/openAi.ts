@@ -10,15 +10,17 @@ export default async function handler(
     req:NextApiRequest,
     res:NextApiResponse
 ){
-
-    const completion = await openAi.createCompletion({
-        model: 'text-davinci-002',
-    prompt: req.body.text,
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    max_tokens: 256,
+    
+    try {
+    const completion = await openAi.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: req.body
     })
+    console.log(completion)
     res.status(200).json({result:completion.data});
+    }catch(error){
+        console.error(error.message);
+        res.status(500).json({ error: error.message });
+    }
+  
 }
