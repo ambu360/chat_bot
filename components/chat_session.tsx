@@ -6,6 +6,7 @@ import {
   SetStateAction
    } from "react";
 import { MessageType,ConversationType } from "./HomePage";
+import useSWR from 'swr'
 
 interface ChatSessionProps {
   value: string;
@@ -18,6 +19,7 @@ interface ChatSessionProps {
   setConversation:Dispatch<SetStateAction<MessageType[]>>
 }
 
+
 const ChatSession: React.FC<ChatSessionProps> = ({
   value,
   setValue,
@@ -28,7 +30,18 @@ const ChatSession: React.FC<ChatSessionProps> = ({
   conversation,
   setConversation
 }) => {
-  const [message,setMessage] = useState<MessageType>({role:'',content:''})
+
+  const fetchOpenAiResponse = async (conversation) =>{
+    const response = await fetch('/api/openAi',{
+      method:'POST',
+      headers:{
+        'content-type':'application/json'
+      },
+      body: conversation
+    })
+    const data = await response.json()
+    return(data.result.choices[0].message.content)
+  }
   const handleKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
     
@@ -39,30 +52,17 @@ const ChatSession: React.FC<ChatSessionProps> = ({
         }else{
           setConversation((prevConvo)=>([...prevConvo,{role:'user',content:value}]))
         }
-        /*
-        if(conversation==[]){
-          setConversation([message])
-        }else{
-            setConversation(prevConvo =>([...prevConvo,message]));
-        }
-       */
-       if(conversation){
-        console.log(conversation)
-         const response = await fetch('/api/openAi',{
-           method:'POST',
-           headers:{
-             'content-type':'application/json'
-           },
-           body: JSON.stringify(conversation)
-         })
-         const data = await response.json()
-      
          setValue('')
-         setCompletion(data.result.choices[0].message.content)
-       }
+         try {
+          const response = await fetchOpenAiResponse(conversation);
+          setCompletion(response);
+        } catch (error) {
+          console.error(error);
+        }
+       
       }
     },
-    [value,message]
+    [value]
   );
 
   const handleInput = useCallback(
@@ -72,9 +72,20 @@ const ChatSession: React.FC<ChatSessionProps> = ({
       //setConversation([{role:'user',content:e.target.value}])
      
     },
-    []
+    [value]
   );
 
+  const { data: openAiCompletion, error } = useSWR(
+    conversation ? [ JSON.stringify(conversation)] : null,
+    fetchOpenAiResponse
+  );
+
+  useEffect(() => {
+    if (openAiCompletion) {
+      setCompletion(openAiCompletion);
+    }
+  }, [ openAiCompletion,conversation]);
+ 
   return (
     <main className=" p-5 fixed bottom-0 w-full">
       <input
