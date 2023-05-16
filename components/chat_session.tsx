@@ -32,6 +32,7 @@ const fetchOpenAiResponse = async (conversation: MessageType[]) => {
     body: JSON.stringify(conversation),
   });
   const data = await response.json();
+  console.log(data)
   return data.result.choices[0].message.content;
 };
 

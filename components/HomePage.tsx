@@ -19,7 +19,7 @@ export default function HomePage({ session }) {
   const [value, setValue] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [completion, setCompletion] = useState<string>("");
-  const [coversation, setConversation] = useState<MessageType[]>();
+  const [conversation, setConversation] = useState<MessageType[]>();
   useEffect(() => {
     getUserProfile();
   });
@@ -46,14 +46,18 @@ export default function HomePage({ session }) {
   }
   //add 
   return (
-    <main className="flex justify-center flex-col items-center p-5 w-4/12">
-      
-      <div className="">
-        <h1>CHAT BOT</h1>
-      </div>
-      <h3>{username}</h3>
-      <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-
+    <main className="flex justify-center items-center">
+      {!conversation && 
+      <div className="flex justify-center flex-col items-center p-5 ">
+        <div className="">
+          <h1>CHAT BOT</h1>
+        </div>
+        <h3>{username}</h3>
+        <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
+      </div>}
+      {completion && <ConversationList 
+          conversation = {conversation}
+        />}
       <ChatSession
         value={value}
         setValue={setValue}
@@ -61,12 +65,10 @@ export default function HomePage({ session }) {
         setPrompt={setPrompt}
         completion={completion}
         setCompletion={setCompletion}
-        conversation={coversation}
+        conversation={conversation}
         setConversation={setConversation}
       />
-      {completion && <ConversationList 
-        coversation = {coversation}
-      />}
+     
     </main>
   );
 }
