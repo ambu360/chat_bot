@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
+import ConversationList from './conversationList'
+
 export interface MessageType {
   role: string;
   content: string;
@@ -13,7 +15,7 @@ export default function HomePage({ session }) {
   const user = useUser();
   const [username, SetUsername] = useState();
   const [loading, setLoading] = useState(false);
-
+  const [showIntroModal,SetShowIntroModal] = useState<boolean>(true)
   const [value, setValue] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [completion, setCompletion] = useState<string>("");
@@ -42,13 +44,16 @@ export default function HomePage({ session }) {
       console.log(error);
     }
   }
+  //add 
   return (
     <main className="flex justify-center flex-col items-center p-5 w-4/12">
+      
       <div className="">
         <h1>CHAT BOT</h1>
       </div>
       <h3>{username}</h3>
       <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
+
       <ChatSession
         value={value}
         setValue={setValue}
@@ -59,7 +64,9 @@ export default function HomePage({ session }) {
         conversation={coversation}
         setConversation={setConversation}
       />
-      {completion && <h1>{completion}</h1>}
+      {completion && <ConversationList 
+        coversation = {coversation}
+      />}
     </main>
   );
 }
