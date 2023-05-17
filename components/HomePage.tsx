@@ -4,6 +4,7 @@ import ChatSession from "./chat_session";
 import ConversationList from './conversationList'
 
 export interface MessageType {
+  id:string
   role: string;
   content: string;
 }
@@ -55,7 +56,7 @@ export default function HomePage({ session }) {
         <h3>{username}</h3>
         <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
       </div>}
-      {completion && <ConversationList 
+      {conversation && <ConversationList 
           conversation = {conversation}
         />}
       <ChatSession

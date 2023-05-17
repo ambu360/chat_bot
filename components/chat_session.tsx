@@ -5,7 +5,7 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-
+import {nanoid} from 'nanoid'
 import { MessageType, ConversationType } from "./HomePage";
 import useSWR from "swr";
 
@@ -24,16 +24,25 @@ interface ChatSessionProps {
 //fetcher function for SWR
 //gets current conversation and sends it as a string to api/openAi and returns the openai completion
 const fetchOpenAiResponse = async (conversation: MessageType[]) => {
+  
+  const conversation_post_req = conversation.map(convo => {
+    return {
+      role:convo.role,
+      content:convo.content
+    }
+  })
   const response = await fetch("/api/openAi", {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(conversation),
+    body: JSON.stringify(conversation_post_req),
   });
   const data = await response.json();
-  console.log(data)
-  return data.result.choices[0].message.content;
+  //console.log(data)
+  const cleaned_data = {id:data.result.id, content:data.result.choices[0].message.content}
+  console.log(cleaned_data)
+  return cleaned_data;
 };
 
 const ChatSession: React.FC<ChatSessionProps> = ({
@@ -53,11 +62,11 @@ const ChatSession: React.FC<ChatSessionProps> = ({
       if (e.key === "Enter") {
         //setPrompt(value);
         if (!conversation) {
-          setConversation([{ role: "user", content: value }]);
+          setConversation([{ id:nanoid(),role: "user", content: value }]);
         } else {
           setConversation((prevConvo) => [
             ...prevConvo,
-            { role: "user", content: value },
+            { id:nanoid(),role: "user", content: value },
           ]);
         }
         setValue("");
@@ -84,21 +93,23 @@ const ChatSession: React.FC<ChatSessionProps> = ({
   );
 
   //updates the completeion(openAi message respone) when ever userswr returnsn a response
-  useEffect(() => {
+ /* useEffect(() => {
     if (openAiCompletion) {
       setCompletion(openAiCompletion);
     }
   }, [openAiCompletion, conversation]);
-
+*/
   //add message to conversation when ever completeion gets updated
   useEffect(() => {
     if (openAiCompletion) {
+
       setConversation((prevConvo) => [
         ...prevConvo,
-        { role: "system", content: openAiCompletion },
+        { id:openAiCompletion.id,role: "system", content: openAiCompletion.content },
       ]);
+      console.log('open ai useeffect')
     }
-  }, [openAiCompletion]);
+  }, [openAiCompletion,conversation]);
   return (
     <main className=" p-5 fixed bottom-0 w-full">
       <input
