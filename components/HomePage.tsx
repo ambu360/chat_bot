@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
 import ConversationList from './conversationList'
-
+import Sidebar from '@/components/sidebar'
 export interface MessageType {
   id:string
   role: string;
@@ -47,9 +47,10 @@ export default function HomePage({ session }) {
   }
   //add 
   return (
-    <main className="flex justify-center items-center">
+    <main className="flex justify-center ">
+      <Sidebar/>
       {!conversation && 
-      <div className="flex justify-center flex-col items-center p-5 ">
+      <div className="flex justify-center flex-col items-center pt-5 pb-5 w-full">
         <div className="">
           <h1>CHAT BOT</h1>
         </div>

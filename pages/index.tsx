@@ -5,6 +5,7 @@ import {useState,useEffect} from 'react'
 import Account from '../components/Account'
 import type { NextPage } from 'next';
 import HomePage from '@/components/HomePage'
+import Sidebar from '@/components/sidebar'
 const Home:NextPage  = () => {
 
   const session = useSession()
@@ -13,16 +14,16 @@ const Home:NextPage  = () => {
   //varaiables tracked for opnai
   
   return (
-    <div className="flex justify-center flex-col items-center" style={{ padding: '50px 0 100px 0' }}>
+    <div className="flex justify-center flex-col items-center" >
       {!session ? (
-        <div className='p-5 w-4/12'>
+        <div className='w-4/12'>
           <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} theme="dark" />
           </div>
       ) : (
-        <>
+        <div className='gird  w-full'>
         <HomePage session={session}/>
-        <input type = 'text'></input>
-        </>
+       
+        </div>
       )}
     </div>
   )
