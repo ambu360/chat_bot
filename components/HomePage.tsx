@@ -1,33 +1,35 @@
 import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
-import ConversationList from './conversationList'
-import Sidebar from '@/components/sidebar'
+import ConversationList from "./conversationList";
+import Sidebar from "@/components/sidebar";
+import { nanoid } from "nanoid";
 export interface MessageType {
-  id:string
+  id: string;
   role: string;
   content: string;
 }
-export interface ConversationType {
-  messages: MessageType[];
-}
+export type ConversationType = MessageType[];
+export type ConversationListType = ConversationType[];
+
 export default function HomePage({ session }) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [username, SetUsername] = useState();
-  const [loading, setLoading] = useState(false);
-  const [showIntroModal,SetShowIntroModal] = useState<boolean>(true)
+ 
+  //const [showIntroModal, SetShowIntroModal] = useState<boolean>(true);
   const [value, setValue] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [completion, setCompletion] = useState<string>("");
-  const [conversation, setConversation] = useState<MessageType[]>();
+  const [conversation, setConversation] = useState<ConversationType>();
+  const [conversationsList, setConversationsList] = useState([]);
   useEffect(() => {
     getUserProfile();
   });
 
   async function getUserProfile() {
     try {
-      setLoading(true);
+    
 
       let { data, error, status } = await supabase
         .from("profiles")
@@ -45,21 +47,23 @@ export default function HomePage({ session }) {
       console.log(error);
     }
   }
-  //add 
+  const handleSignOut = ()=>{
+    supabase.auth.signOut()
+  }
+  //add
   return (
     <main className="flex justify-center ">
-      <Sidebar/>
-      {!conversation && 
-      <div className="flex justify-center flex-col items-center pt-5 pb-5 w-full">
-        <div className="">
-          <h1>CHAT BOT</h1>
+      <Sidebar handleSignOut = {handleSignOut}/>
+      {!conversation && (
+        <div className="flex justify-center flex-col items-center pt-5 pb-5 w-full">
+          <div className="">
+            <h1>CHAT BOT</h1>
+          </div>
+          <h3>{username}</h3>
+          <button onClick={handleSignOut}>Sign Out</button>
         </div>
-        <h3>{username}</h3>
-        <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-      </div>}
-      {conversation && <ConversationList 
-          conversation = {conversation}
-        />}
+      )}
+      {conversation && <ConversationList  conversation={conversation} />}
       <ChatSession
         value={value}
         setValue={setValue}
@@ -69,8 +73,9 @@ export default function HomePage({ session }) {
         setCompletion={setCompletion}
         conversation={conversation}
         setConversation={setConversation}
+
+      
       />
-     
     </main>
   );
 }

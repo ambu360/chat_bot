@@ -1,14 +1,16 @@
-import { MessageType } from "./HomePage";
+import { MessageType,ConversationType } from "./HomePage";
 import { AiOutlineUser } from "react-icons/ai";
 import { BiBot } from "react-icons/bi";
 import ReactMarkdown from "react-markdown";
 import { useRef, useEffect, RefObject } from "react";
 
 interface ConversationListTypes {
-  conversation: MessageType[];
+  conversation: ConversationType;
+
 }
 const ConversationList: React.FC<ConversationListTypes> = ({
   conversation,
+ 
 }) => {
   const divRef: RefObject<HTMLDivElement | null> = useRef(null);
   useEffect(() => {
@@ -23,13 +25,15 @@ const ConversationList: React.FC<ConversationListTypes> = ({
         return (
           <div
             ref={divRef}
-            key={message.content}
+            key={message.id}
             className={`grid grid-cols-4 items-center w-full justify-center p-5  ${bg}`}
           >
             <p className="text-xl col-span-1 self-start justify-self-end decoration-slate-700 text-3xl m-2">
-              {message.role === "user" ? <AiOutlineUser /> : <BiBot />}{" "}
+              {message.role === "user" ? <AiOutlineUser /> : <BiBot />}
             </p>
+            
             <ReactMarkdown className="text-lg col-span-3 m-2 w-3/4">
+              
               {message.content}
             </ReactMarkdown>
           </div>
