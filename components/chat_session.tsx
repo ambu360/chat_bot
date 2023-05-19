@@ -111,14 +111,14 @@ const ChatSession: React.FC<ChatSessionProps> = ({
     }
   }, [openAiCompletion,conversation]);
   return (
-    <main className=" flex fixed items-center pt-10 justify-center bottom-0 w-3/4   mb-5 ">
+    <main className=" flex fixed items-center justify-center bottom-0 w-3/4   mb-5 ">
       <input
         type="text"
         placeholder="enter your prompt"
         value={value}
         onChange={handleInput}
         onKeyDown={handleKeyDown}
-        className="w-full  px-4 py-2 border  ml-48 border-slate-700 rounded-md text-center "
+        className="w-full  px-4 py-2 border  ml-48 border-slate-700 rounded-md text-center focus:border-slate-900  "
       />
     </main>
   );
