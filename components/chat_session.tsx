@@ -92,13 +92,6 @@ const ChatSession: React.FC<ChatSessionProps> = ({
     fetchOpenAiResponse
   );
 
-  //updates the completeion(openAi message respone) when ever userswr returnsn a response
- /* useEffect(() => {
-    if (openAiCompletion) {
-      setCompletion(openAiCompletion);
-    }
-  }, [openAiCompletion, conversation]);
-*/
   //add message to conversation when ever completeion gets updated
   useEffect(() => {
     if (openAiCompletion) {
