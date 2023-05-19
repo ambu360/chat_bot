@@ -67,10 +67,6 @@ export default function HomePage({ session }) {
       <ChatSession
         value={value}
         setValue={setValue}
-        prompt={prompt}
-        setPrompt={setPrompt}
-        completion={completion}
-        setCompletion={setCompletion}
         conversation={conversation}
         setConversation={setConversation}
 
