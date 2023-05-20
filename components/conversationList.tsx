@@ -1,4 +1,4 @@
-import { MessageType,ConversationType } from "./HomePage";
+import { MessageType, ConversationType } from "./HomePage";
 import { AiOutlineUser } from "react-icons/ai";
 import { BiBot } from "react-icons/bi";
 import ReactMarkdown from "react-markdown";
@@ -6,13 +6,11 @@ import { useRef, useEffect, RefObject } from "react";
 
 interface ConversationListTypes {
   conversation: ConversationType;
-
 }
 const ConversationList: React.FC<ConversationListTypes> = ({
   conversation,
- 
 }) => {
-  const divRef: RefObject<HTMLDivElement | null> = useRef(null);
+  const divRef: RefObject<HTMLDivElement> = useRef(null);
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   });
@@ -31,9 +29,8 @@ const ConversationList: React.FC<ConversationListTypes> = ({
             <p className="text-xl col-span-1 self-start justify-self-end decoration-slate-700 text-3xl m-2">
               {message.role === "user" ? <AiOutlineUser /> : <BiBot />}
             </p>
-            
+
             <ReactMarkdown className="text-lg col-span-3 m-2 w-3/4">
-              
               {message.content}
             </ReactMarkdown>
           </div>

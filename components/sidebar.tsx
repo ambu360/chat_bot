@@ -1,9 +1,8 @@
 import { BsPlus, BsTrash, BsKey } from "react-icons/bs";
-import {VscSignOut} from 'react-icons/vsc'
-
+import { VscSignOut } from "react-icons/vsc";
 
 interface SidebarProps {
-  handleSignOut:() => void
+  handleSignOut: () => void;
 }
 const Sidebar = ({ handleSignOut }: SidebarProps): JSX.Element => {
   return (
@@ -28,7 +27,10 @@ const Sidebar = ({ handleSignOut }: SidebarProps): JSX.Element => {
           <BsKey />
           <p className="pl-2">OpenAi key</p>
         </button>
-        <button onClick={handleSignOut} className="border border-slate-700 rounded-md w-full p-2 flex flex-row items-center text-white text-md hover:border-slate-900 ">
+        <button
+          onClick={handleSignOut}
+          className="border border-slate-700 rounded-md w-full p-2 flex flex-row items-center text-white text-md hover:border-slate-900 "
+        >
           <VscSignOut />
           <p className="pl-2">Sign Out</p>
         </button>
