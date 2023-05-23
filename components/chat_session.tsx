@@ -15,6 +15,7 @@ interface ChatSessionProps {
   setValue: Dispatch<SetStateAction<string>>;
   conversation: ConversationType | undefined;
   setConversation: Dispatch<SetStateAction<ConversationType>>;
+  createNewConversation: () => void
 }
 
 //fetcher function for SWR
@@ -48,6 +49,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
   setValue,
   conversation,
   setConversation,
+  createNewConversation,
 }) => {
   const [showAnimation, setShowAnimation] = useState<string>("");
   //on enter appends the the current value to the conversation array.
@@ -57,7 +59,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
       if (e.key === "Enter") {
         //setPrompt(value);
         if (!conversation) {
-          setConversation([{ id: nanoid(), role: "user", content: value }]);
+          createNewConversation()
         } else {
           setConversation((prevConvo: ConversationType) => [
             ...prevConvo,
@@ -65,6 +67,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
           ]);
         }
         setValue("");
+
       }
     },
     [value]

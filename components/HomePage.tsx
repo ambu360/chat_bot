@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
 import ConversationList from "./conversationList";
@@ -12,7 +12,7 @@ export interface MessageType {
 }
 
 export type ConversationType = MessageType[];
-export type ConversationListType = ConversationType[];
+export type ConversationListType = { id: string, title: string, conversation: ConversationType[] };
 
 export default function HomePage({ session }) {
   const supabase = useSupabaseClient();
@@ -22,7 +22,8 @@ export default function HomePage({ session }) {
   //const [showIntroModal, SetShowIntroModal] = useState<boolean>(true);
   const [value, setValue] = useState<string>("");
   const [conversation, setConversation] = useState<ConversationType>();
-  const [conversationsList, setConversationsList] = useState([]);
+  const [conversationsList, setConversationsList] = useState<ConversationListType[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string>('')
   useEffect(() => {
     getUserProfile();
   });
@@ -45,13 +46,68 @@ export default function HomePage({ session }) {
       console.log(error);
     }
   }
+
+  //update conversationsationList
+  useEffect(() => {
+    if (currentConversationId) {
+      updateConversationsList(currentConversationId);
+    }
+  }, [conversation, currentConversationId]);
+  //add current conversation to conversationList
+  const updateConversationsList = useCallback((id: string) => {
+    console.log('update ran')
+    console.log('conversation')
+    if (conversation) {
+      if (conversationsList.length === 0) {
+        setConversationsList([{ id: id, title: `New chat`, conversation: conversation }])
+      } else {
+        const updatedConversations = conversationsList.map((prevConvo: ConversationListType) => {
+          if (prevConvo.id === id) {
+            return { ...prevConvo, conversation: conversation }
+          } else {
+            return { ...prevConvo }
+          }
+        }) as ConversationListType[];
+        if (!updatedConversations.find((prevConvo) => prevConvo.id === id)) {
+          updatedConversations.push({ id: id, title: `New chat`, conversation: conversation });
+        }
+        setConversationsList(updatedConversations);
+      }
+    }
+  }, [conversation, currentConversationId, conversationsList])
+  // to create conversation
+  const createNewConversation = () => {
+    if (!conversation) {
+      const newConvoId = nanoid()
+      setConversation([{ id: nanoid(), role: 'user', content: value }])
+      setCurrentConversationId(newConvoId)
+    }
+  }
+
+  //set converation to undefined allowing new item to be added to conversationList
+  const handleNewChat = () => {
+    setConversation(undefined)
+  }
+
+  //sidebar conversationlist handle to set current conversation based on respective button
+  const handleConversationChange = (id: string) => {
+    conversationsList.map((prevConvo: ConversationListType) => prevConvo.id === id ? setConversation(prevConvo.conversation) : null)
+    setCurrentConversationId(id)
+  }
+
   const handleSignOut = () => {
     supabase.auth.signOut();
   };
-  
+
   return (
     <main className="flex justify-center ">
-      <Sidebar handleSignOut={handleSignOut} />
+      <Sidebar
+        conversationsList={conversationsList}
+        handleNewChat={handleNewChat}
+        handleSignOut={handleSignOut}
+        handleConversationChange={handleConversationChange}
+        currentConversationId={currentConversationId}
+      />
       {!conversation && (
         <div className="flex justify-center flex-col items-center pt-5 pb-5 w-full">
           <div className="">
@@ -67,6 +123,7 @@ export default function HomePage({ session }) {
         setValue={setValue}
         conversation={conversation}
         setConversation={setConversation}
+        createNewConversation={createNewConversation}
       />
     </main>
   );
