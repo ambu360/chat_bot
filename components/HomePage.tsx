@@ -53,6 +53,7 @@ export default function HomePage({ session }) {
       updateConversationsList(currentConversationId);
     }
   }, [conversation, currentConversationId]);
+
   //add current conversation to conversationList
   const updateConversationsList = useCallback((id: string) => {
     console.log('update ran')
@@ -75,7 +76,8 @@ export default function HomePage({ session }) {
       }
     }
   }, [conversation, currentConversationId, conversationsList])
-  // to create conversation
+
+  // create new conversation giving it an id and setting the current id to the respective id 
   const createNewConversation = () => {
     if (!conversation) {
       const newConvoId = nanoid()

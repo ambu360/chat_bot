@@ -116,6 +116,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
       ]);
     }
   }, [openAiCompletion, conversation]);
+  
   return (
     <main className=" flex fixed items-center justify-center bottom-0 w-3/4   mb-5 ">
       <input

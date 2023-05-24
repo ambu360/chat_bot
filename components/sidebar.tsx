@@ -23,10 +23,10 @@ const Sidebar = ({ handleSignOut, conversationsList, handleNewChat, handleConver
         className=" pt-2 pb-2 pl-3 mt-2 border-2 rounded-md text-white text-md w-5/6 bg-slate-800 hover:border-slate-900"
       ></input>
       <hr className=" w-5/6  h-px my-4 bg-gray-200 border-0 bg-slate-300 " />
-      <div className='flex flex-col items-center justify-center w-5/6 '>
+      <div className='flex mt-2 mb-2 flex-col items-center justify-start h-full w-5/6 overflow-auto'>
         {conversationsList && conversationsList.map((prevConvo: ConversationListType, index: number) => {
           return (<button onClick={() => handleConversationChange(prevConvo.id)} key={prevConvo.id}
-            className={`border ${prevConvo.id === currentConversationId ? ('border-lime-300') : ('')} mb-1 rounded-md w-full p-2 flex items-center justify-center text-white text-md hover:border-slate-900 `}
+            className={`border ${prevConvo.id === currentConversationId ? ('border-lime-300') : ('')} mb-1 rounded-md w-full p-2 flex items-center justify-center text-white text-md hover:bg-slate-900 `}
           >{prevConvo.title} {index + 1}</button>)
         })}
       </div>
