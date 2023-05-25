@@ -5,7 +5,6 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { nanoid } from "nanoid";
 import { MessageType, ConversationType } from "./HomePage";
 import useSWR from "swr";
 
@@ -15,7 +14,8 @@ interface ChatSessionProps {
   setValue: Dispatch<SetStateAction<string>>;
   conversation: ConversationType | undefined;
   setConversation: Dispatch<SetStateAction<ConversationType>>;
-  createNewConversation: () => void
+  createNewConversation: () => void;
+  generateId:() => string 
 }
 
 //fetcher function for SWR
@@ -50,6 +50,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
   conversation,
   setConversation,
   createNewConversation,
+  generateId
 }) => {
   const [showAnimation, setShowAnimation] = useState<string>("");
   //on enter appends the the current value to the conversation array.
@@ -63,7 +64,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
         } else {
           setConversation((prevConvo: ConversationType) => [
             ...prevConvo,
-            { id: nanoid(), role: "user", content: value },
+            { id: generateId(), role: "user", content: value },
           ]);
         }
         setValue("");

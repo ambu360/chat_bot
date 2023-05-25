@@ -3,7 +3,7 @@ import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import ChatSession from "./chat_session";
 import ConversationList from "./conversationList";
 import Sidebar from "@/components/sidebar";
-import { nanoid } from "nanoid";
+import {v4 as uuidv4} from 'uuid'
 
 export interface MessageType {
   id: string;
@@ -24,6 +24,11 @@ export default function HomePage({ session }) {
   const [conversation, setConversation] = useState<ConversationType>();
   const [conversationsList, setConversationsList] = useState<ConversationListType[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string>('')
+
+
+  const generateId = () =>{
+    return uuidv4()
+  }
   useEffect(() => {
     getUserProfile();
   });
@@ -32,7 +37,7 @@ export default function HomePage({ session }) {
     try {
       let { data, error, status } = await supabase
         .from("profiles")
-        .select("username, website,avatar_url")
+        .select("username")
         .eq("id", user.id)
         .single();
 
@@ -46,6 +51,7 @@ export default function HomePage({ session }) {
       console.log(error);
     }
   }
+ 
 
   //update conversationsationList
   useEffect(() => {
@@ -56,8 +62,6 @@ export default function HomePage({ session }) {
 
   //add current conversation to conversationList
   const updateConversationsList = useCallback((id: string) => {
-    console.log('update ran')
-    console.log('conversation')
     if (conversation) {
       if (conversationsList.length === 0) {
         setConversationsList([{ id: id, title: `New chat`, conversation: conversation }])
@@ -80,8 +84,8 @@ export default function HomePage({ session }) {
   // create new conversation giving it an id and setting the current id to the respective id 
   const createNewConversation = () => {
     if (!conversation) {
-      const newConvoId = nanoid()
-      setConversation([{ id: nanoid(), role: 'user', content: value }])
+      const newConvoId = generateId()
+      setConversation([{ id: generateId(), role: 'user', content: value }])
       setCurrentConversationId(newConvoId)
     }
   }
@@ -126,6 +130,7 @@ export default function HomePage({ session }) {
         conversation={conversation}
         setConversation={setConversation}
         createNewConversation={createNewConversation}
+        generateId = {generateId}
       />
     </main>
   );
