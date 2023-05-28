@@ -16,7 +16,7 @@ export default async function handler(
       messages: req.body,
     });
     res.status(200).json({ result: completion.data });
-  } catch (error) {
+  } catch (error:any) {
     console.error(error.message);
     res.status(400).json({ error: error.message });
   }
