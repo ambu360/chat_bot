@@ -12,7 +12,7 @@ import useSWR from "swr";
 interface ChatSessionProps {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  conversation: ConversationType | undefined;
+  conversation: ConversationType ;
   setConversation: Dispatch<SetStateAction<ConversationType>>;
   createNewConversation: () => void;
   generateId:() => string 
@@ -59,7 +59,8 @@ const ChatSession: React.FC<ChatSessionProps> = ({
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         //setPrompt(value);
-        if (!conversation) {
+        if (conversation.length == 0) {
+          console.log('new convo')
           createNewConversation()
         } else {
           setConversation((prevConvo: ConversationType) => [
@@ -89,7 +90,7 @@ const ChatSession: React.FC<ChatSessionProps> = ({
     isLoading,
     error,
   } = useSWR(
-    conversation && conversation[conversation.length - 1].role != "system"
+    conversation.length !=0 && conversation[conversation.length - 1].role != "system"
       ? conversation
       : null,
     fetchOpenAiResponse

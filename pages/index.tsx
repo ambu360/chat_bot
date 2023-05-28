@@ -22,7 +22,7 @@ const Home: NextPage = () => {
         </div>
       ) : (
         <div className="gird  w-full">
-          <HomePage session={session} />
+          <HomePage  />
         </div>
       )}
     </div>

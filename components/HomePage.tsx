@@ -12,16 +12,16 @@ export interface MessageType {
 }
 
 export type ConversationType = MessageType[];
-export type ConversationListType = { id: string, title: string, conversation: ConversationType[] };
+export type ConversationListType = { id: string, title: string, conversation: ConversationType };
 
-export default function HomePage({ session }) {
+export default function HomePage() {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [username, SetUsername] = useState();
 
   //const [showIntroModal, SetShowIntroModal] = useState<boolean>(true);
   const [value, setValue] = useState<string>("");
-  const [conversation, setConversation] = useState<ConversationType>();
+  const [conversation, setConversation] = useState<ConversationType >([]);
   const [conversationsList, setConversationsList] = useState<ConversationListType[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string>('')
 
@@ -35,17 +35,19 @@ export default function HomePage({ session }) {
 
   async function getUserProfile() {
     try {
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select("username")
-        .eq("id", user.id)
-        .single();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-      if (data) {
-        SetUsername(data.username);
+      if(user){
+        let { data, error, status } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", user.id)
+          .single();
+  
+        if (error && status !== 406) {
+          throw error;
+        }
+        if (data) {
+          SetUsername(data.username);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -62,8 +64,9 @@ export default function HomePage({ session }) {
 
   //add current conversation to conversationList
   const updateConversationsList = useCallback((id: string) => {
-    if (conversation) {
-      if (conversationsList.length === 0) {
+    console.log('update ran')
+    if (conversation.length != 0) {
+      if (conversationsList.length == 0) {
         setConversationsList([{ id: id, title: `New chat`, conversation: conversation }])
       } else {
         const updatedConversations = conversationsList.map((prevConvo: ConversationListType) => {
@@ -83,7 +86,7 @@ export default function HomePage({ session }) {
 
   // create new conversation giving it an id and setting the current id to the respective id 
   const createNewConversation = () => {
-    if (!conversation) {
+    if (conversation.length == 0) {
       const newConvoId = generateId()
       setConversation([{ id: generateId(), role: 'user', content: value }])
       setCurrentConversationId(newConvoId)
@@ -92,7 +95,7 @@ export default function HomePage({ session }) {
 
   //set converation to undefined allowing new item to be added to conversationList
   const handleNewChat = () => {
-    setConversation(undefined)
+    setConversation([])
   }
 
   //sidebar conversationlist handle to set current conversation based on respective button
