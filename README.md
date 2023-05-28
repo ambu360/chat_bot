@@ -1,7 +1,19 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
 
+wokring vercel website: https://chat-9l5deyfvp-ambu360.vercel.app/
+
+This is my attempt at making a chathpt clone using openAI
+
+--Features currently being worked on.
+- storing user conversations on a supabase serve.
+- giving uses the optiions of using diffrent GPT models(currently using gpt-3.5-turbo)
+- dark/light mode
+
+--Current issues
+-open AI response times are withing 12/15s , while vercel times out the fetch requests at 10s,leading to the response being a 504 error
+
+## Getting Started
 First, run the development server:
 
 ```bash
